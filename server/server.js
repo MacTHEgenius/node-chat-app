@@ -17,6 +17,16 @@ router.use(express.static(publicPath));
 io.on('connection', (socket) => {
     console.log('New connection');
     
+    socket.emit('newMessage', { 
+        from: 'macthegenius', 
+        text: 'Hey you ! Hello world !', 
+        createdAt: 123123
+    });
+    
+    socket.on('createMessage', (data) => {
+        console.log('createMessage', data);
+    });
+    
     socket.on('disconnect', (socket) => {
         console.log('A disconnection occured');
     });
