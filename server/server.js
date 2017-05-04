@@ -17,14 +17,13 @@ router.use(express.static(publicPath));
 io.on('connection', (socket) => {
     console.log('New connection');
     
-    socket.emit('newMessage', { 
-        from: 'macthegenius', 
-        text: 'Hey you ! Hello world !', 
-        createdAt: 123123
-    });
-    
     socket.on('createMessage', (data) => {
         console.log('createMessage', data);
+        io.emit('newMessage', { 
+            from: data.from, 
+            text: data.text, 
+            createdAt: new Date().getTime()
+        });
     });
     
     socket.on('disconnect', (socket) => {
