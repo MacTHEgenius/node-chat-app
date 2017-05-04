@@ -17,9 +17,26 @@ router.use(express.static(publicPath));
 io.on('connection', (socket) => {
     console.log('New connection');
     
+    socket.emit('newMessage', {
+        from: 'Admin',
+        text: 'Greetings, chatter !',
+        createdAt: new Date().getTime()
+    });
+    
+    socket.broadcast.emit('newMessage', {
+        from: 'Admin',
+        text: 'New user joined',
+        createdAt: new Date().getTime()
+    });
+    
     socket.on('createMessage', (data) => {
         console.log('createMessage', data);
-        io.emit('newMessage', { 
+        // io.emit('newMessage', { 
+        //     from: data.from, 
+        //     text: data.text, 
+        //     createdAt: new Date().getTime()
+        // });
+        socket.broadcast.emit('newMessage', { 
             from: data.from, 
             text: data.text, 
             createdAt: new Date().getTime()
