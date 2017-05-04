@@ -3,7 +3,9 @@ const http = require('http');
 const express = require('express');
 const socketIO = require('socket.io');
 
-const { generateMessage } = require('./utils/message');
+const {
+    generateMessage
+} = require('./utils/message');
 
 // Configure
 
@@ -18,22 +20,23 @@ router.use(express.static(publicPath));
 
 io.on('connection', (socket) => {
     console.log('New connection');
-    
+
     socket.emit('newMessage', generateMessage('Admin', 'Greetings, chatter !'));
-    
+
     socket.broadcast.emit('newMessage', generateMessage('Admin', 'New user joined'));
-    
-    socket.on('createMessage', (data) => {
+
+    socket.on('createMessage', (data, callback) => {
         console.log('createMessage', data);
         io.emit('newMessage', generateMessage(data.from, data.text));
-        
+        callback('This is from the server');
+
         // socket.broadcast.emit('newMessage', { 
         //     from: data.from, 
         //     text: data.text, 
         //     createdAt: new Date().getTime()
         // });
     });
-    
+
     socket.on('disconnect', (socket) => {
         console.log('A disconnection occured');
     });
